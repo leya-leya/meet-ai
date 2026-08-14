@@ -1,9 +1,10 @@
 import os
+from collections.abc import Iterator
 from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -58,6 +59,11 @@ def _create_engine(database_url: str) -> Engine:
 
 engine = _create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+
+def get_db() -> Iterator[Session]:
+    with SessionLocal() as session:
+        yield session
 
 
 def init_db() -> None:
