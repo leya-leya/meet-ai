@@ -3,6 +3,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from fastapi import UploadFile
+from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -68,4 +69,60 @@ def create_record(
     except (FileTooLargeError, OSError, SQLAlchemyError):
         session.rollback()
         stored_path.unlink(missing_ok=True)
+        raise
+
+
+def list_records(*, session: Session, query: str | None = None) -> list[Record]:
+    statement = select(Record).order_by(Record.created_at.desc())
+    records = list(session.scalars(statement))
+    if not query:
+        return records
+
+    normalized_query = query.casefold()
+    return [
+        record
+        for record in records
+        if normalized_query in record.title.casefold()
+    ]
+
+
+def get_record(*, session: Session, record_id: str) -> Record | None:
+    return session.get(Record, record_id)
+
+
+def update_record(
+    *,
+    session: Session,
+    record: Record,
+    changes: dict[str, str | None],
+) -> Record:
+    if not changes:
+        return record
+
+    for field, value in changes.items():
+        setattr(record, field, value)
+
+    try:
+        session.commit()
+        session.refresh(record)
+        return record
+    except SQLAlchemyError:
+        session.rollback()
+        raise
+
+
+def delete_record(
+    *,
+    session: Session,
+    record: Record,
+    upload_dir: Path,
+) -> None:
+    file_path = upload_dir / record.stored_filename
+    file_path.unlink(missing_ok=True)
+
+    try:
+        session.delete(record)
+        session.commit()
+    except SQLAlchemyError:
+        session.rollback()
         raise
