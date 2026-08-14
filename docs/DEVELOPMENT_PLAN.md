@@ -176,12 +176,12 @@ failed
 
 **测试：**
 
-- [ ] 正常流程最终 `completed`
-- [ ] transcript 被保存
-- [ ] summary 被保存
-- [ ] ASR 异常最终 `failed`
-- [ ] LLM 异常最终 `failed`
-- [ ] 错误信息被保存
+- [x] 正常流程最终 `completed`
+- [x] transcript 被保存
+- [x] summary 被保存
+- [x] ASR 异常最终 `failed`
+- [x] LLM 异常最终 `failed`
+- [x] 错误信息被保存
 
 ---
 
@@ -204,10 +204,10 @@ POST /api/records/{id}/process
 
 **测试：**
 
-- [ ] 上传后调用 process 可得到 `completed`
-- [ ] 返回 transcript
-- [ ] 返回 summary
-- [ ] 不存在 ID 返回 404
+- [x] 上传后调用 process 可得到 `completed`
+- [x] 返回 transcript
+- [x] 返回 summary
+- [x] 不存在 ID 返回 404
 
 **验收命令：**
 

@@ -15,8 +15,17 @@ from app.services.processing_service import process_record
 
 class StatusTrackingSession(Session):
     committed_statuses: list[RecordStatus]
+    fail_once_on_status: RecordStatus | None
 
     def commit(self) -> None:
+        fail_once_on_status = getattr(self, "fail_once_on_status", None)
+        if any(
+            isinstance(value, Record) and value.status == fail_once_on_status
+            for value in self.identity_map.values()
+        ):
+            self.fail_once_on_status = None
+            raise RuntimeError("database write failed")
+
         super().commit()
         statuses = [
             value.status
@@ -217,3 +226,38 @@ def test_llm_failure_keeps_persisted_transcript(
         assert persisted_record.error_message == "LLM unavailable"
         assert persisted_record.transcript == MOCK_TRANSCRIPT
         assert persisted_record.summary is None
+
+
+def test_completion_commit_failure_keeps_generated_outputs(
+    processing_context: tuple[
+        sessionmaker[StatusTrackingSession], Record, Path
+    ],
+) -> None:
+    testing_session, detached_record, media_path = processing_context
+    record_id = detached_record.id
+
+    with testing_session() as session:
+        session.committed_statuses = []
+        session.fail_once_on_status = RecordStatus.COMPLETED
+        record = session.merge(detached_record)
+
+        result = process_record(
+            session=session,
+            record=record,
+            file_path=media_path,
+            asr_provider=MockASRProvider(),
+            llm_provider=MockLLMProvider(),
+        )
+
+        assert result.status == RecordStatus.FAILED
+        assert result.error_message == "database write failed"
+        assert result.transcript == MOCK_TRANSCRIPT
+        assert result.summary == MOCK_SUMMARY
+
+    with testing_session() as verification_session:
+        persisted_record = verification_session.get(Record, record_id)
+        assert persisted_record is not None
+        assert persisted_record.status == RecordStatus.FAILED
+        assert persisted_record.error_message == "database write failed"
+        assert persisted_record.transcript == MOCK_TRANSCRIPT
+        assert persisted_record.summary == MOCK_SUMMARY
