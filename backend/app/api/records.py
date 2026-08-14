@@ -3,7 +3,11 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 import app.db as db
+from app.models.record import Record, RecordStatus
+from app.providers.asr.mock import MockASRProvider
+from app.providers.llm.mock import MockLLMProvider
 from app.schemas.record import RecordRead
+from app.services.processing_service import process_record
 from app.services.record_service import (
     FileTooLargeError,
     UnsupportedFileTypeError,
@@ -39,3 +43,33 @@ def upload_record(
         file.file.close()
 
     return RecordRead.model_validate(record)
+
+
+@router.post("/{record_id}/process", response_model=RecordRead)
+def process_uploaded_record(
+    record_id: str,
+    session: Session = Depends(db.get_db),
+) -> RecordRead:
+    record = session.get(Record, record_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Record not found")
+
+    file_path = db.UPLOAD_DIR / record.stored_filename
+    if not file_path.is_file():
+        error_detail = "Uploaded media file not found"
+        record.status = RecordStatus.FAILED
+        record.error_message = error_detail
+        session.commit()
+        raise HTTPException(
+            status_code=404,
+            detail=error_detail,
+        )
+
+    processed_record = process_record(
+        session=session,
+        record=record,
+        file_path=file_path,
+        asr_provider=MockASRProvider(),
+        llm_provider=MockLLMProvider(),
+    )
+    return RecordRead.model_validate(processed_record)

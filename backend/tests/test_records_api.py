@@ -11,6 +11,8 @@ from sqlalchemy.orm import Session, sessionmaker
 import app.db as db
 from app.main import app
 from app.models.record import Record, RecordStatus
+from app.providers.asr.mock import MOCK_TRANSCRIPT
+from app.providers.llm.mock import MOCK_SUMMARY
 
 
 @pytest.fixture
@@ -217,3 +219,78 @@ def test_database_failure_returns_clear_error_and_removes_saved_file(
     assert response.status_code == 500
     assert response.json() == {"detail": "Failed to save record"}
     assert not list(upload_dir.glob("*"))
+
+
+def test_process_uploaded_record_returns_and_persists_completed_record(
+    record_api: tuple[TestClient, sessionmaker[Session], Path],
+) -> None:
+    client, testing_session, _ = record_api
+    upload_response = client.post(
+        "/api/records",
+        files={"file": ("meeting.mp3", b"audio", "audio/mpeg")},
+    )
+    record_id = upload_response.json()["id"]
+
+    response = client.post(f"/api/records/{record_id}/process")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "id": record_id,
+        "title": "meeting",
+        "original_filename": "meeting.mp3",
+        "file_type": ".mp3",
+        "file_size": 5,
+        "status": "completed",
+        "transcript": MOCK_TRANSCRIPT,
+        "summary": MOCK_SUMMARY,
+        "error_message": None,
+        "created_at": response.json()["created_at"],
+        "updated_at": response.json()["updated_at"],
+    }
+
+    with testing_session() as session:
+        record = session.get(Record, record_id)
+        assert record is not None
+        assert record.status == RecordStatus.COMPLETED
+        assert record.transcript == MOCK_TRANSCRIPT
+        assert record.summary == MOCK_SUMMARY
+        assert record.error_message is None
+
+
+def test_process_unknown_record_returns_404(
+    record_api: tuple[TestClient, sessionmaker[Session], Path],
+) -> None:
+    client, _, _ = record_api
+
+    response = client.post("/api/records/missing-record/process")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Record not found"}
+
+
+def test_process_record_with_missing_local_file_returns_clear_error(
+    record_api: tuple[TestClient, sessionmaker[Session], Path],
+) -> None:
+    client, testing_session, upload_dir = record_api
+    upload_response = client.post(
+        "/api/records",
+        files={"file": ("meeting.mp3", b"audio", "audio/mpeg")},
+    )
+    record_id = upload_response.json()["id"]
+
+    with testing_session() as session:
+        record = session.get(Record, record_id)
+        assert record is not None
+        (upload_dir / record.stored_filename).unlink()
+
+    response = client.post(f"/api/records/{record_id}/process")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Uploaded media file not found"}
+    with testing_session() as session:
+        record = session.get(Record, record_id)
+        assert record is not None
+        assert record.status == RecordStatus.FAILED
+        assert record.transcript is None
+        assert record.summary is None
+        assert record.error_message == "Uploaded media file not found"
