@@ -60,11 +60,11 @@ pytest tests/test_health.py tests/test_database.py -v
 
 **验收：**
 
-- [ ] `/health` 测试通过
-- [ ] SQLite 表创建测试通过
-- [ ] `.env` 被 gitignore
-- [ ] `uploads/` 内容被 gitignore
-- [ ] `data/*.db` 被 gitignore
+- [x] `/health` 测试通过
+- [x] SQLite 表创建测试通过
+- [x] `.env` 被 gitignore
+- [x] `uploads/` 内容被 gitignore
+- [x] `data/*.db` 被 gitignore
 
 ---
 
