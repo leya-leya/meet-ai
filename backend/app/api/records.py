@@ -1,3 +1,5 @@
+from urllib.parse import quote
+
 from fastapi import (
     APIRouter,
     Depends,
@@ -15,6 +17,11 @@ from app.models.record import Record, RecordStatus
 from app.providers.asr.mock import MockASRProvider
 from app.providers.llm.mock import MockLLMProvider
 from app.schemas.record import RecordRead, RecordUpdate
+from app.services.export_service import (
+    build_download_filename,
+    generate_markdown,
+    generate_txt,
+)
 from app.services.processing_service import process_record
 from app.services.record_service import (
     FileTooLargeError,
@@ -36,6 +43,22 @@ def _get_record_or_404(*, session: Session, record_id: str) -> Record:
     if record is None:
         raise HTTPException(status_code=404, detail="Record not found")
     return record
+
+
+def _download_response(
+    *,
+    content: str,
+    media_type: str,
+    filename: str,
+) -> Response:
+    extension = filename.rsplit(".", maxsplit=1)[-1]
+    headers = {
+        "Content-Disposition": (
+            f"attachment; filename=record.{extension}; "
+            f"filename*=UTF-8''{quote(filename)}"
+        )
+    }
+    return Response(content=content, media_type=media_type, headers=headers)
 
 
 @router.post("", response_model=RecordRead, status_code=status.HTTP_201_CREATED)
@@ -110,6 +133,32 @@ def get_record_detail(
 ) -> RecordRead:
     record = _get_record_or_404(session=session, record_id=record_id)
     return RecordRead.model_validate(record)
+
+
+@router.get("/{record_id}/export/txt")
+def export_record_as_txt(
+    record_id: str,
+    session: Session = Depends(db.get_db),
+) -> Response:
+    record = _get_record_or_404(session=session, record_id=record_id)
+    return _download_response(
+        content=generate_txt(record),
+        media_type="text/plain",
+        filename=build_download_filename(record.title, "txt"),
+    )
+
+
+@router.get("/{record_id}/export/md")
+def export_record_as_markdown(
+    record_id: str,
+    session: Session = Depends(db.get_db),
+) -> Response:
+    record = _get_record_or_404(session=session, record_id=record_id)
+    return _download_response(
+        content=generate_markdown(record),
+        media_type="text/markdown",
+        filename=build_download_filename(record.title, "md"),
+    )
 
 
 @router.patch("/{record_id}", response_model=RecordRead)
