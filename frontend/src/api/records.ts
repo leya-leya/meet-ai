@@ -10,6 +10,9 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     } | null;
     throw new Error(payload?.detail ?? "请求失败");
   }
+  if (response.status === 204) {
+    return undefined as T;
+  }
   return response.json() as Promise<T>;
 }
 
@@ -36,4 +39,10 @@ export function listRecords(query?: string): Promise<RecordItem[]> {
 
 export function getRecord(recordId: string): Promise<RecordItem> {
   return request<RecordItem>(`/records/${encodeURIComponent(recordId)}`);
+}
+
+export function deleteRecord(recordId: string): Promise<void> {
+  return request<void>(`/records/${encodeURIComponent(recordId)}`, {
+    method: "DELETE",
+  });
 }

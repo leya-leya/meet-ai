@@ -171,6 +171,147 @@ h1 {
   cursor: not-allowed;
 }
 
+.history-search {
+  display: grid;
+  max-width: 620px;
+  margin-top: 30px;
+  gap: 9px;
+}
+
+.history-search label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.history-search-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.history-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 13px;
+  border: 1px solid #cfd5dc;
+  border-radius: 9px;
+  color: inherit;
+  background: #ffffff;
+  font: inherit;
+}
+
+.history-search input:focus {
+  border-color: #2457d6;
+  outline: 3px solid #e7edff;
+}
+
+.history-search .primary-button {
+  min-width: 92px;
+}
+
+.history-message,
+.history-empty {
+  margin: 24px 0 0;
+}
+
+.history-empty {
+  padding: 32px;
+  border: 1px dashed #cfd5dc;
+  border-radius: 12px;
+  color: #68717c;
+  text-align: center;
+}
+
+.record-list {
+  display: grid;
+  margin-top: 28px;
+  gap: 14px;
+}
+
+.record-card {
+  position: relative;
+  padding: 22px 112px 22px 22px;
+  border: 1px solid #e0e4e9;
+  border-radius: 12px;
+  background: #fbfcfe;
+}
+
+.record-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.record-title {
+  color: #183f9e;
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.record-title:hover {
+  text-decoration: underline;
+}
+
+.record-status {
+  padding: 4px 9px;
+  border-radius: 999px;
+  color: #4d5a6b;
+  background: #e9edf2;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-completed {
+  color: #17643a;
+  background: #e4f5eb;
+}
+
+.status-failed {
+  color: #9c2525;
+  background: #fff0f0;
+}
+
+.record-meta {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 16px 0 0;
+  gap: 14px 28px;
+}
+
+.record-meta div {
+  display: flex;
+  gap: 7px;
+}
+
+.record-meta dt {
+  color: #7a838d;
+  font-size: 13px;
+}
+
+.record-meta dd {
+  margin: 0;
+  color: #404852;
+  font-size: 13px;
+}
+
+.delete-button {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  padding: 8px 13px;
+  border: 1px solid #e0b9b9;
+  border-radius: 8px;
+  color: #9c2525;
+  background: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+}
+
+.delete-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 @media (max-width: 600px) {
   .header-inner,
   .page-container {
@@ -192,5 +333,35 @@ h1 {
   .page-card {
     min-height: 240px;
     padding: 28px 24px;
+  }
+
+  .history-search-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .history-search .primary-button {
+    width: 100%;
+  }
+
+  .record-card {
+    padding: 20px;
+  }
+
+  .record-card-heading {
+    padding-right: 70px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .delete-button {
+    top: 18px;
+    right: 18px;
+  }
+
+  .record-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
   }
 }
