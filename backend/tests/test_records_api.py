@@ -418,6 +418,31 @@ def test_patch_record_updates_only_requested_editable_field(
         assert getattr(record, field) == value
 
 
+def test_patch_record_changes_are_returned_by_a_fresh_detail_request(
+    record_api: tuple[TestClient, sessionmaker[Session], Path],
+) -> None:
+    client, _, _ = record_api
+    uploaded = upload_test_record(client, "refresh.mp3")
+    changes = {
+        "title": "刷新后的标题",
+        "summary": "刷新后的摘要",
+        "transcript": "刷新后的转写",
+    }
+
+    patch_response = client.patch(
+        f"/api/records/{uploaded['id']}",
+        json=changes,
+    )
+    detail_response = client.get(f"/api/records/{uploaded['id']}")
+
+    assert patch_response.status_code == 200
+    assert detail_response.status_code == 200
+    assert {
+        field: detail_response.json()[field]
+        for field in changes
+    } == changes
+
+
 @pytest.mark.parametrize("invalid_title", ["", "   ", None])
 def test_patch_record_rejects_empty_title(
     record_api: tuple[TestClient, sessionmaker[Session], Path],

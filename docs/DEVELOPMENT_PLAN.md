@@ -258,16 +258,16 @@ transcript
 
 **测试：**
 
-- [ ] 列表倒序
-- [ ] 标题搜索
-- [ ] 详情查询
-- [ ] 修改标题
-- [ ] 修改摘要
-- [ ] 修改 transcript
-- [ ] 空标题拒绝
-- [ ] 删除记录
-- [ ] 删除本地文件
-- [ ] 本地文件缺失时仍可删除记录
+- [x] 列表倒序
+- [x] 标题搜索
+- [x] 详情查询
+- [x] 修改标题
+- [x] 修改摘要
+- [x] 修改 transcript
+- [x] 空标题拒绝
+- [x] 删除记录
+- [x] 删除本地文件
+- [x] 本地文件缺失时仍可删除记录
 
 ---
 
@@ -299,12 +299,12 @@ GET /api/records/{id}/export/md
 
 **测试：**
 
-- [ ] TXT Content-Type 正确
-- [ ] Markdown Content-Type 正确
-- [ ] 下载文件名合理
-- [ ] 内容包含摘要
-- [ ] 内容包含 transcript
-- [ ] 不存在记录返回 404
+- [x] TXT Content-Type 正确
+- [x] Markdown Content-Type 正确
+- [x] 下载文件名合理
+- [x] 内容包含摘要
+- [x] 内容包含 transcript
+- [x] 不存在记录返回 404
 
 ---
 
@@ -346,8 +346,8 @@ frontend/src/api/records.ts
 npm run build
 ```
 
-- [ ] Build 通过
-- [ ] 三个 URL 可正常显示页面骨架
+- [x] Build 通过
+- [x] 三个 URL 可正常显示页面骨架
 
 ---
 
@@ -380,10 +380,10 @@ npm run build
 
 **测试/验证：**
 
-- [ ] 未选择文件时不能提交
-- [ ] API 错误可见
-- [ ] 成功后进入详情
-- [ ] `npm run build` 通过
+- [x] 未选择文件时不能提交
+- [x] API 错误可见
+- [x] 成功后进入详情
+- [x] `npm run build` 通过
 
 ---
 
@@ -408,11 +408,11 @@ npm run build
 
 **验证：**
 
-- [ ] 列表可加载
-- [ ] 搜索可用
-- [ ] 点击可进详情
-- [ ] 删除后列表刷新
-- [ ] `npm run build` 通过
+- [x] 列表可加载
+- [x] 搜索可用
+- [x] 点击可进详情
+- [x] 删除后列表刷新
+- [x] `npm run build` 通过
 
 ---
 
