@@ -97,6 +97,80 @@ h1 {
   line-height: 1.8;
 }
 
+.upload-form {
+  display: grid;
+  max-width: 680px;
+  margin-top: 32px;
+  gap: 18px;
+}
+
+.upload-guidance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  color: #68717c;
+  font-size: 14px;
+}
+
+.upload-guidance p,
+.selected-file,
+.processing-status {
+  margin: 0;
+}
+
+.file-picker {
+  display: flex;
+  width: fit-content;
+  flex-direction: column;
+  cursor: pointer;
+  align-items: flex-start;
+  gap: 8px;
+  font-weight: 650;
+}
+
+.file-picker span {
+  white-space: nowrap;
+}
+
+.file-picker input {
+  max-width: 100%;
+  color: #68717c;
+}
+
+.selected-file,
+.processing-status {
+  color: #4f5965;
+  font-size: 15px;
+}
+
+.error-message {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  color: #9c2525;
+  background: #fff0f0;
+  font-size: 14px;
+}
+
+.primary-button {
+  width: fit-content;
+  min-width: 132px;
+  padding: 11px 20px;
+  border: 0;
+  border-radius: 9px;
+  color: #ffffff;
+  background: #2457d6;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.primary-button:disabled {
+  color: #8b929b;
+  background: #e5e8ec;
+  cursor: not-allowed;
+}
+
 @media (max-width: 600px) {
   .header-inner,
   .page-container {
