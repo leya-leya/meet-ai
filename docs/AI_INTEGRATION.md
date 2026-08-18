@@ -76,6 +76,8 @@ Provider 不负责：
 - 生成摘要
 - 修改前端
 
+V1.0 的 `RealASRProvider` 使用科大讯飞录音文件转写标准版 Web API。Provider 内部完成文件流上传、订单轮询和纯文本提取，业务层仍只依赖上述统一接口。
+
 ---
 
 ## 4. LLM Provider
@@ -180,18 +182,23 @@ V1.0 不提前实现复杂分块摘要系统。
 
 ```env
 ASR_PROVIDER=mock
-ASR_API_KEY=
+ASR_APP_ID=
+ASR_SECRET_KEY=
 
 LLM_PROVIDER=mock
 LLM_API_KEY=
 ```
 
-可以增加具体供应商需要的：
+当前 ASR Provider 取值：
+
+```text
+mock
+xfyun
+```
+
+科大讯飞标准版接口地址固定在 Provider 内，不增加无实际用途的 ASR 地址或模型环境变量。后续真实 LLM Provider 可以按实际供应商增加：
 
 ```env
-ASR_BASE_URL=
-ASR_MODEL=
-
 LLM_BASE_URL=
 LLM_MODEL=
 ```
@@ -281,7 +288,8 @@ record.error_message
 
 ```env
 ASR_PROVIDER=mock
-ASR_API_KEY=
+ASR_APP_ID=
+ASR_SECRET_KEY=
 LLM_PROVIDER=mock
 LLM_API_KEY=
 ```

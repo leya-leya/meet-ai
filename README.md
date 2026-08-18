@@ -148,7 +148,8 @@ http://localhost:8000
 
 ```env
 ASR_PROVIDER=mock
-ASR_API_KEY=
+ASR_APP_ID=
+ASR_SECRET_KEY=
 LLM_PROVIDER=mock
 LLM_API_KEY=
 DATABASE_URL=sqlite:///./data/app.db
@@ -157,6 +158,16 @@ MAX_UPLOAD_MB=500
 ```
 
 真实 `.env` 不得提交到 Git。
+
+ASR 自动测试和本地无外网开发默认使用 `mock`。使用科大讯飞录音文件转写标准版时，在项目根目录 `.env` 中设置：
+
+```env
+ASR_PROVIDER=xfyun
+ASR_APP_ID=
+ASR_SECRET_KEY=
+```
+
+`ASR_APP_ID` 和 `ASR_SECRET_KEY` 只由后端读取，不得写入前端、源码或日志。
 
 ---
 
@@ -235,6 +246,7 @@ YYYY-MM-DD | 版本/阶段 | 简要变更 | 对应任务
 2026-08-17 | 0.8.0 | 完成单文件上传、同步处理状态与详情跳转 | Task 8
 2026-08-17 | 0.9.0 | 完成历史记录列表、标题搜索与单条删除交互 | Task 9
 2026-08-17 | 0.10.0 | 完成详情编辑保存、TXT/Markdown 下载与详情删除交互 | Task 10
+2026-08-18 | 0.11.0 | 接入科大讯飞录音文件转写标准版并完成真实媒体验证 | Task 11
 ```
 
 ---

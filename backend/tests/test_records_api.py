@@ -21,6 +21,7 @@ def record_api(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> Iterator[tuple[TestClient, sessionmaker[Session], Path]]:
+    monkeypatch.setenv("ASR_PROVIDER", "mock")
     database_path = tmp_path / "test.db"
     upload_dir = tmp_path / "uploads"
     engine = create_engine(
@@ -295,6 +296,30 @@ def test_process_record_with_missing_local_file_returns_clear_error(
         assert record.transcript is None
         assert record.summary is None
         assert record.error_message == "Uploaded media file not found"
+
+
+def test_invalid_asr_provider_marks_record_failed_with_clear_error(
+    record_api: tuple[TestClient, sessionmaker[Session], Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client, testing_session, _ = record_api
+    upload_response = client.post(
+        "/api/records",
+        files={"file": ("meeting.mp3", b"audio", "audio/mpeg")},
+    )
+    record_id = upload_response.json()["id"]
+    monkeypatch.setenv("ASR_PROVIDER", "unknown")
+
+    response = client.post(f"/api/records/{record_id}/process")
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "failed"
+    assert response.json()["error_message"] == "Unsupported ASR provider: unknown"
+    with testing_session() as session:
+        record = session.get(Record, record_id)
+        assert record is not None
+        assert record.status == RecordStatus.FAILED
+        assert record.error_message == "Unsupported ASR provider: unknown"
 
 
 def upload_test_record(

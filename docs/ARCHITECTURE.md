@@ -392,7 +392,7 @@ ProcessingService
    ↓
 ASRProvider
    ├─ MockASRProvider
-   └─ RealASRProvider
+   └─ RealASRProvider（科大讯飞录音文件转写标准版）
 
 ProcessingService
    ↓
@@ -403,7 +403,7 @@ LLMProvider
 
 开发和自动测试默认使用 Mock Provider。
 
-真实 Provider 后续按 `docs/AI_INTEGRATION.md` 接入。
+真实 ASR Provider 已按 `docs/AI_INTEGRATION.md` 接入；真实 LLM Provider 在 Task 12 接入。
 
 ---
 

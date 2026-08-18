@@ -14,7 +14,8 @@ from sqlalchemy.orm import Session
 
 import app.db as db
 from app.models.record import Record, RecordStatus
-from app.providers.asr.mock import MockASRProvider
+from app.providers.asr.base import ASRProviderError
+from app.providers.asr.factory import get_asr_provider
 from app.providers.llm.mock import MockLLMProvider
 from app.schemas.record import RecordRead, RecordUpdate
 from app.services.export_service import (
@@ -107,11 +108,20 @@ def process_uploaded_record(
             detail=error_detail,
         )
 
+    try:
+        asr_provider = get_asr_provider()
+    except ASRProviderError as exc:
+        record.status = RecordStatus.FAILED
+        record.error_message = str(exc)
+        session.commit()
+        session.refresh(record)
+        return RecordRead.model_validate(record)
+
     processed_record = process_record(
         session=session,
         record=record,
         file_path=file_path,
-        asr_provider=MockASRProvider(),
+        asr_provider=asr_provider,
         llm_provider=MockLLMProvider(),
     )
     return RecordRead.model_validate(processed_record)
