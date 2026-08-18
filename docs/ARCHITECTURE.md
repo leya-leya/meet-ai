@@ -398,12 +398,12 @@ ProcessingService
    ↓
 LLMProvider
    ├─ MockLLMProvider
-   └─ RealLLMProvider
+   └─ RealLLMProvider（DeepSeek API / deepseek-v4-flash）
 ```
 
 开发和自动测试默认使用 Mock Provider。
 
-真实 ASR Provider 已按 `docs/AI_INTEGRATION.md` 接入；真实 LLM Provider 在 Task 12 接入。
+真实 ASR 与 LLM Provider 均按 `docs/AI_INTEGRATION.md` 接入；业务层仍只依赖统一 Provider 接口。
 
 ---
 

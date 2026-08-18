@@ -257,6 +257,10 @@ V1.0 的语音转文字能力接入科大讯飞录音文件转写标准版 Web A
 
 仓库不包含科大讯飞服务端代码、真实 AppID、SecretKey 或用户媒体数据，也不把第三方服务能力声明为本项目自主实现的算法。
 
+V1.0 的 AI 摘要能力接入 DeepSeek OpenAI 兼容 API，使用 `deepseek-v4-flash` 模型。该服务仅作为外部 LLM 能力依赖；本项目自行实现固定摘要 Prompt、Provider 适配、输出结构校验、错误转换及摘要数据的业务处理。
+
+仓库不包含 DeepSeek 服务端代码或真实 API Key。LLM 只接收 transcript 并返回 Markdown 摘要，不直接访问数据库、不修改原 transcript，也不调用其他业务系统。
+
 ---
 
 ## 10. AI 辅助开发记录

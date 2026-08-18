@@ -16,7 +16,8 @@ import app.db as db
 from app.models.record import Record, RecordStatus
 from app.providers.asr.base import ASRProviderError
 from app.providers.asr.factory import get_asr_provider
-from app.providers.llm.mock import MockLLMProvider
+from app.providers.llm.base import LLMProviderError
+from app.providers.llm.factory import get_llm_provider
 from app.schemas.record import RecordRead, RecordUpdate
 from app.services.export_service import (
     build_download_filename,
@@ -110,7 +111,8 @@ def process_uploaded_record(
 
     try:
         asr_provider = get_asr_provider()
-    except ASRProviderError as exc:
+        llm_provider = get_llm_provider()
+    except (ASRProviderError, LLMProviderError) as exc:
         record.status = RecordStatus.FAILED
         record.error_message = str(exc)
         session.commit()
@@ -122,7 +124,7 @@ def process_uploaded_record(
         record=record,
         file_path=file_path,
         asr_provider=asr_provider,
-        llm_provider=MockLLMProvider(),
+        llm_provider=llm_provider,
     )
     return RecordRead.model_validate(processed_record)
 

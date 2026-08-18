@@ -152,6 +152,8 @@ ASR_APP_ID=
 ASR_SECRET_KEY=
 LLM_PROVIDER=mock
 LLM_API_KEY=
+LLM_BASE_URL=https://api.deepseek.com
+LLM_MODEL=deepseek-v4-flash
 DATABASE_URL=sqlite:///./data/app.db
 UPLOAD_DIR=./uploads
 MAX_UPLOAD_MB=500
@@ -247,6 +249,7 @@ YYYY-MM-DD | 版本/阶段 | 简要变更 | 对应任务
 2026-08-17 | 0.9.0 | 完成历史记录列表、标题搜索与单条删除交互 | Task 9
 2026-08-17 | 0.10.0 | 完成详情编辑保存、TXT/Markdown 下载与详情删除交互 | Task 10
 2026-08-18 | 0.11.0 | 接入科大讯飞录音文件转写标准版并完成真实媒体验证 | Task 11
+2026-08-18 | 0.12.0 | 接入 DeepSeek deepseek-v4-flash 并完成真实摘要验证 | Task 12
 ```
 
 ---

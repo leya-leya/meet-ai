@@ -112,6 +112,8 @@ Markdown 字符串
 ## 待办事项
 ```
 
+V1.0 的 `RealLLMProvider` 使用 DeepSeek OpenAI 兼容 API，固定模型为 `deepseek-v4-flash`。Provider 只接收 transcript 并返回 Markdown 摘要，不访问数据库，也不修改原 transcript。
+
 ---
 
 ## 5. 推荐摘要 Prompt
@@ -187,6 +189,8 @@ ASR_SECRET_KEY=
 
 LLM_PROVIDER=mock
 LLM_API_KEY=
+LLM_BASE_URL=https://api.deepseek.com
+LLM_MODEL=deepseek-v4-flash
 ```
 
 当前 ASR Provider 取值：
@@ -196,14 +200,21 @@ mock
 xfyun
 ```
 
-科大讯飞标准版接口地址固定在 Provider 内，不增加无实际用途的 ASR 地址或模型环境变量。后续真实 LLM Provider 可以按实际供应商增加：
+科大讯飞标准版接口地址固定在 Provider 内，不增加无实际用途的 ASR 地址或模型环境变量。
 
-```env
-LLM_BASE_URL=
-LLM_MODEL=
+当前 LLM Provider 取值：
+
+```text
+mock
+deepseek
 ```
 
-但只有实际 Provider 使用时再增加。
+DeepSeek Provider 使用：
+
+```env
+LLM_BASE_URL=https://api.deepseek.com
+LLM_MODEL=deepseek-v4-flash
+```
 
 不要预先增加十几个供应商变量。
 
@@ -292,6 +303,8 @@ ASR_APP_ID=
 ASR_SECRET_KEY=
 LLM_PROVIDER=mock
 LLM_API_KEY=
+LLM_BASE_URL=https://api.deepseek.com
+LLM_MODEL=deepseek-v4-flash
 ```
 
 ---
