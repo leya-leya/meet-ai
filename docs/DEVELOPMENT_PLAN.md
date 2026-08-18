@@ -558,7 +558,7 @@ npm run build
 
 全部通过后：
 
-- [ ] 更新 README 版本记录为 `1.0.0`
-- [ ] 更新 `docs/SOFT_COPYRIGHT.md` 的实际完成信息
-- [ ] 不再新增 V1.0 功能
-- [ ] 创建 Git tag `v1.0.0`
+- [x] 更新 README 版本记录为 `1.0.0`
+- [x] 更新 `docs/SOFT_COPYRIGHT.md` 的实际完成信息
+- [x] 不再新增 V1.0 功能
+- [x] 创建 Git tag `v1.0.0`

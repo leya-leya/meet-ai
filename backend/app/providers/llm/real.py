@@ -107,7 +107,12 @@ class RealLLMProvider(LLMProvider):
         if not isinstance(summary, str) or not summary.strip():
             raise LLMProviderError("DeepSeek LLM returned an empty summary")
         normalized_summary = summary.strip()
-        if any(heading not in normalized_summary for heading in REQUIRED_HEADINGS):
+        summary_headings = tuple(
+            line.strip()
+            for line in normalized_summary.splitlines()
+            if line.strip().startswith("## ")
+        )
+        if summary_headings != REQUIRED_HEADINGS:
             raise LLMProviderError(
                 "DeepSeek LLM summary is missing required headings"
             )

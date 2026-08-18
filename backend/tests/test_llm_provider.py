@@ -183,9 +183,15 @@ def test_real_provider_rejects_invalid_json_response(
             "## 内容摘要\n\n只有摘要，没有其他固定段落。",
             "DeepSeek LLM summary is missing required headings",
         ),
+        (
+            "## 核心要点\n\n- 要点\n\n"
+            "## 内容摘要\n\n摘要\n\n"
+            "## 待办事项\n\n- 无明确待办事项",
+            "DeepSeek LLM summary is missing required headings",
+        ),
     ],
 )
-def test_real_provider_rejects_incomplete_summary(
+def test_real_provider_rejects_invalid_heading_structure(
     monkeypatch: pytest.MonkeyPatch,
     content: str,
     expected_error: str,
