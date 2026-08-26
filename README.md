@@ -177,6 +177,25 @@ ASR_SECRET_KEY=
 
 ## 6. 开发方式
 
+推荐使用项目内的串行自动开发流水线。它为每个 Task 启动新的 Developer、独立只读 Reviewer，并在需要时最多启动两轮 Fixer；客观测试与 Reviewer 都通过后才提交 Git。普通 Task 自动继续，Milestone / BLOCKED / 安全风险才停止。
+
+第一次先做只读检查：
+
+```powershell
+.\automation\autodev.ps1 -DryRun
+```
+
+开始或恢复：
+
+```powershell
+.\automation\autodev.ps1
+.\automation\autodev.ps1 -Resume
+```
+
+V1.0 Task 1–13 当前均为 DONE，所以 DryRun 不会重新开发已冻结功能。完整参数、Task 状态、日志、Reviewer JSON、BLOCKED 和 Milestone 规则见 `automation/README.md`。
+
+人工单次调用 Codex 时，仍可使用以下指令：
+
 每次让 Codex 工作时，优先使用这种指令：
 
 ```text
@@ -253,6 +272,7 @@ YYYY-MM-DD | 版本/阶段 | 简要变更 | 对应任务
 2026-08-18 | 0.11.0 | 接入科大讯飞录音文件转写标准版，并使用 4 分 28 秒 MP4 完成真实转写验证 | Task 11
 2026-08-18 | 0.12.0 | 接入 DeepSeek deepseek-v4-flash 并完成真实摘要验证 | Task 12
 2026-08-18 | 1.0.0 | 完成真实端到端验收、软著截图与 V1.0 版本冻结 | Task 13
+2026-08-18 | 开发流程 | 增加串行自动开发、独立 Reviewer、自动修复、测试、提交与 Milestone Gate | 自动化基础设施改造
 ```
 
 ---

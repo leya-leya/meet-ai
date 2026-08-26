@@ -1,6 +1,6 @@
 # AI 智能会议纪要与内容管理系统 V1.0 — Implementation Plan
 
-> **For agentic workers:** 每次只执行一个 Task。每个 Task 完成后必须运行验证，再更新复选框。不得提前实现后续 Task。
+> **For agentic workers:** 每个 Developer / Fixer Agent 每次只执行一个 Task，不得提前实现后续 Task。使用 `automation/autodev.ps1` 时，普通 Task 通过客观测试、独立 Reviewer 和 Git commit 后，由编排器自动进入下一 Task；仅在 Milestone、BLOCKED 或安全风险时停止。
 
 **Goal:** 完成“上传音视频 → 转文字 → AI摘要 → 内容编辑 → 历史记录 → 导出”的内部 MVP。
 
@@ -17,6 +17,18 @@
 - 默认使用 Mock Provider 完成测试。
 - 修改后必须运行相关测试。
 - 每项任务完成后在 README 版本记录追加一行。
+
+## 自动化执行约定
+
+- 本文档继续是产品 Task 与 Acceptance Criteria 的唯一真相源。
+- `automation/state/tasks.json` 只保存机器运行状态、依赖、Milestone 和本文档锚点，不复制需求正文。
+- 状态依次使用 `TODO / IN_PROGRESS / REVIEW / FIXING / DONE / BLOCKED`。
+- Developer、Reviewer、Fixer 必须使用新的 Agent 上下文；Reviewer 为只读角色。
+- `automation/test.ps1` 的退出码是客观测试结论，AI 不得覆盖。
+- 最多自动修复两轮；仍未 PASS 则 BLOCKED。
+- Test PASS 且 Reviewer PASS 才允许 Git commit。
+- 普通 Task commit 后自动继续；Milestone 最后一个 Task commit 后生成报告并停止。
+- 详细运行方法见 `automation/README.md`。
 
 ---
 

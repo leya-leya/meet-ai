@@ -1,9 +1,19 @@
 # AI 智能会议纪要与内容管理系统 V1.0
 # Codex 开发 / Reviewer / 人工验收操作手册
 
-> 固定流程：**主开发 → Reviewer → 你人工验收 → PASS → 下一 Task**
+> 默认流程：**autodev 编排器 → 独立 Developer → 客观测试 → 独立只读 Reviewer → 必要时 Fixer → PASS 后 Git commit → 下一普通 Task**
 >
-> 每次只做一个 Task。主开发和 Reviewer 都不得自动继续下一 Task。
+> 每个 Agent 仍然只做一个 Task，不能自行进入下一 Task。普通 Task 之间由 `automation/autodev.ps1` 自动推进；只有 Milestone、BLOCKED 或安全风险等待人工验收。
+
+## 自动化入口（默认）
+
+```powershell
+.\automation\autodev.ps1 -DryRun
+.\automation\autodev.ps1
+.\automation\autodev.ps1 -Resume
+```
+
+详细状态、参数、日志、Reviewer JSON、自动修复和安全规则见 `automation/README.md`。下方逐 Task 指令与人工检查清单继续作为 Acceptance Criteria 和手动降级方案，不再要求普通 Task 每次人工复制 Reviewer 意见。
 
 ## 统一使用规则
 
@@ -35,9 +45,9 @@
 5. 完成后运行当前 Task 要求的测试及必要回归测试。
 6. 检查 git status / git diff。
 7. 更新 README 版本记录。
-8. 当前 Task 独立 Git commit。
-9. 不自动继续下一 Task。
-10. 最后给出：完成内容、测试命令与结果、变更文件、commit SHA。
+8. 自动化运行时不自行 commit，由编排器在测试和 Reviewer PASS 后提交。
+9. 不自行继续下一 Task；自动化运行时由编排器决定下一步。
+10. 最后给出：完成内容、测试命令与结果、变更文件和风险。
 ```
 
 ### Reviewer 通用前缀
@@ -60,36 +70,14 @@ docs/TESTING.md
 
 规则：
 1. 不开发下一 Task。
-2. Critical / Important 问题允许做最小修复并重新测试。
+2. Reviewer 必须保持只读，不得修复或修改文件；需要修复时返回 FIX，由新的 Fixer Agent 处理。
 3. Minor 问题可以记录，不要为了洁癖大范围重构。
 4. 检查测试是不是真测试。
 5. 检查是否范围外开发。
 6. 检查 README 是否更新。
 7. 最后必须输出：
 
-### 审查结论
-PASS / PASS WITH FIXES / FAIL
-
-### Critical
-...
-
-### Important
-...
-
-### Minor
-...
-
-### 已修复
-...
-
-### 测试结果
-...
-
-### Reviewer 修改文件
-...
-
-### 是否允许进入下一 Task
-YES / NO
+自动化运行时必须输出符合 `automation/schemas/review-result.schema.json` 的 JSON，结论只允许 PASS / FIX / BLOCKED。手工降级审查时可继续使用文字报告，但 Reviewer 仍不得修改代码。
 ```
 
 ### 你自己的通用验收原则
@@ -110,7 +98,7 @@ git log --oneline -5
 git show --stat HEAD
 ```
 
-如果 Reviewer = FAIL / NO，或测试失败、Key 泄露、接口与文档明显不一致，都不要进入下一 Task。
+如果 Reviewer = FIX / BLOCKED，或测试失败、Key 泄露、接口与文档明显不一致，都不要提交或进入下一 Task。
 
 ---
 
@@ -136,7 +124,7 @@ pytest tests/test_health.py tests/test_database.py -v
 ```text
 重点审查 /health、SQLite、records 字段、真实测试、gitignore、requirements 是否过度、是否提前实现 Task 2+。
 必须检查 test_health/test_database 不是 assert True 一类假测试。
-运行 Task 1 测试；Critical/Important 做最小修复；不得开发 Task 2。
+运行 Task 1 测试；只读报告 Critical/Important 问题，返回 FIX 交给新的 Fixer；不得开发 Task 2。
 最后明确：是否允许进入 Task 2：YES / NO
 ```
 ## C. 你重点看的文件
@@ -673,7 +661,7 @@ build 通过；README 更新；独立 commit。
 
 ```text
 做整个 V1.0 最终审查：逐项核对 PRODUCT_SPEC、检查 TODO/TBD、范围外功能、backend pytest、frontend build、真实 ASR/LLM、编辑/历史/导出/删除、Key 安全、gitignore、README/ARCHITECTURE 一致、screenshots、SOFT_COPYRIGHT。
-Critical/Important 仅做最小修复；禁止新增功能。
+Reviewer 只读报告 Critical/Important，返回 FIX 交给新的 Fixer；禁止新增功能。
 最终明确“是否允许冻结 V1.0：YES/NO”。
 最后明确：是否允许进入 Task V1.0 冻结：YES / NO
 ```

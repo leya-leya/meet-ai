@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "project": "AI 智能会议纪要与内容管理系统 V1.0",
+  "source": "docs/DEVELOPMENT_PLAN.md",
+  "milestones": [
+    { "id": "M1", "title": "后端基础与 AI 抽象", "gate_after_task": "TASK-003" },
+    { "id": "M2", "title": "后端业务 API 闭环", "gate_after_task": "TASK-006" },
+    { "id": "M3", "title": "前端完整业务流程", "gate_after_task": "TASK-010" },
+    { "id": "M4", "title": "真实 AI 与 V1.0 冻结", "gate_after_task": "TASK-013" }
+  ],
+  "tasks": [
+    { "id": "TASK-001", "title": "后端基础骨架与数据库", "status": "DONE", "depends_on": [], "milestone": "M1", "source": "docs/DEVELOPMENT_PLAN.md#Task 1", "updated_at": "2026-08-14T00:00:00Z", "last_message": null },
+    { "id": "TASK-002", "title": "上传与创建记录", "status": "DONE", "depends_on": ["TASK-001"], "milestone": "M1", "source": "docs/DEVELOPMENT_PLAN.md#Task 2", "updated_at": "2026-08-14T00:00:00Z", "last_message": null },
+    { "id": "TASK-003", "title": "ASR 与 LLM Provider 接口", "status": "DONE", "depends_on": ["TASK-002"], "milestone": "M1", "source": "docs/DEVELOPMENT_PLAN.md#Task 3", "updated_at": "2026-08-14T00:00:00Z", "last_message": null },
+    { "id": "TASK-004", "title": "处理 API", "status": "DONE", "depends_on": ["TASK-003"], "milestone": "M2", "source": "docs/DEVELOPMENT_PLAN.md#Task 4", "updated_at": "2026-08-14T00:00:00Z", "last_message": null },
+    { "id": "TASK-005", "title": "历史记录、详情、编辑、删除 API", "status": "DONE", "depends_on": ["TASK-004"], "milestone": "M2", "source": "docs/DEVELOPMENT_PLAN.md#Task 5", "updated_at": "2026-08-14T00:00:00Z", "last_message": null },
+    { "id": "TASK-006", "title": "TXT 与 Markdown 导出", "status": "DONE", "depends_on": ["TASK-005"], "milestone": "M2", "source": "docs/DEVELOPMENT_PLAN.md#Task 6", "updated_at": "2026-08-15T00:00:00Z", "last_message": null },
+    { "id": "TASK-007", "title": "前端基础与路由", "status": "DONE", "depends_on": ["TASK-006"], "milestone": "M3", "source": "docs/DEVELOPMENT_PLAN.md#Task 7", "updated_at": "2026-08-15T00:00:00Z", "last_message": null },
+    { "id": "TASK-008", "title": "上传页", "status": "DONE", "depends_on": ["TASK-007"], "milestone": "M3", "source": "docs/DEVELOPMENT_PLAN.md#Task 8", "updated_at": "2026-08-17T00:00:00Z", "last_message": null },
+    { "id": "TASK-009", "title": "历史记录页", "status": "DONE", "depends_on": ["TASK-008"], "milestone": "M3", "source": "docs/DEVELOPMENT_PLAN.md#Task 9", "updated_at": "2026-08-17T00:00:00Z", "last_message": null },
+    { "id": "TASK-010", "title": "详情编辑与导出", "status": "DONE", "depends_on": ["TASK-009"], "milestone": "M3", "source": "docs/DEVELOPMENT_PLAN.md#Task 10", "updated_at": "2026-08-17T00:00:00Z", "last_message": null },
+    { "id": "TASK-011", "title": "接入真实 ASR Provider", "status": "DONE", "depends_on": ["TASK-010"], "milestone": "M4", "source": "docs/DEVELOPMENT_PLAN.md#Task 11", "updated_at": "2026-08-18T00:00:00Z", "last_message": null },
+    { "id": "TASK-012", "title": "接入真实 LLM Provider", "status": "DONE", "depends_on": ["TASK-011"], "milestone": "M4", "source": "docs/DEVELOPMENT_PLAN.md#Task 12", "updated_at": "2026-08-18T00:00:00Z", "last_message": null },
+    { "id": "TASK-013", "title": "端到端验收与软著截图", "status": "DONE", "depends_on": ["TASK-012"], "milestone": "M4", "source": "docs/DEVELOPMENT_PLAN.md#Task 13", "updated_at": "2026-08-18T00:00:00Z", "last_message": null }
+  ]
+}

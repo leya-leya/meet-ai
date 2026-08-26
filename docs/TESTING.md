@@ -282,6 +282,14 @@ npm run build
 
 ## 8. 回归测试
 
+自动化流水线统一执行：
+
+```powershell
+.\automation\test.ps1
+```
+
+该入口依次运行完整后端 pytest、前端 Vitest 和包含 TypeScript typecheck 的前端 build；任一命令非零即整体非零。项目当前没有独立 lint 命令，因此不伪造 lint 结果。
+
 每完成一个后端 Task：
 
 ```bash

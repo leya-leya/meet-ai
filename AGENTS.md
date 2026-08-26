@@ -149,6 +149,15 @@ V1.0 的唯一目标是完成以下闭环：
 
 不得一次性重写整个项目。
 
+这里的“一次”指单个 Developer / Fixer Agent 的职责边界。使用 `automation/autodev.ps1` 时，普通 Task 在完成独立测试、独立 Reviewer 审查和 Git commit 后，可以由编排器自动选择下一 Task；任何 Agent 都不得自行开始下一 Task。
+
+只有以下情况停止等待人工处理：
+
+- Milestone 人工验收节点
+- BLOCKED
+- 安全风险或生产环境权限
+- 自动修复两轮后仍未通过
+
 ---
 
 ### 4.3 修改前先检查现状
@@ -336,6 +345,8 @@ UI 要求：
 ---
 
 ## 12. Codex 每次执行任务时的输出格式
+
+人工单次执行 Task 时仍使用下列格式。自动化流水线运行时，由 `automation/autodev.ps1` 保存 Developer、Reviewer、Fixer、测试与阶段报告，并在 Milestone / BLOCKED 时汇总。
 
 完成任务后，只报告：
 

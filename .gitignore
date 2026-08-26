@@ -17,3 +17,8 @@ frontend/*.tsbuildinfo
 
 .DS_Store
 Thumbs.db
+
+automation/reports/*
+!automation/reports/.gitkeep
+automation/state/*.tmp
+automation/state/test-temp/
